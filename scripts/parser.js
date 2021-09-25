@@ -4,13 +4,13 @@ const jsdom = require("jsdom");
 
 const { JSDOM } = jsdom;
 const filePath = path.join(__dirname, 'db.html');
-
+const exclusionAttrs = ['record', 'early access']
 
 fs.readFile(filePath, (err, html) => {
     const htmlDOM = new JSDOM(html.toString())
     const articles = [...htmlDOM.window.document.querySelectorAll("table")]
 
-    const articlesData = articles.map(article => {
+    let articlesData = articles.map(article => {
         let articleData = {}
         let tbody = [...article.childNodes].filter(node => node.nodeName === 'TBODY')[0]
         
@@ -20,13 +20,12 @@ fs.readFile(filePath, (err, html) => {
                 ...field
             }
         }
-        if (Object.keys(articleData).length !== 0) {
-            return articleData
-        }
-    }).filter(article => article)
+        return articleData
+    }).filter(article => Object.keys(article).length !== 0)
 
     console.log(articlesData)
-    return articlesData
+    articlesData = JSON.stringify(articlesData);
+    fs.writeFile('./articles.json', articlesData, err => err);
 });
 
 const tableRowParser = (rows) => {
@@ -39,6 +38,7 @@ const tableRowParser = (rows) => {
 }
 
 const tableCellParser = (cell) => {
+    
     let keys = []
     let values = []
     let data = {}
@@ -46,8 +46,15 @@ const tableCellParser = (cell) => {
     let cellChildren = cell.filter(el => el.textContent.trim() !== '');
 
     cellChildren.forEach(el => {
-        if (el.nodeName === 'B') {
-            keys.push(el.textContent.trim())
+        if (el.nodeName === 'B' && !isExclusionAttrs(el.textContent)) {
+            if (el.textContent.toLowerCase().includes('author')) {
+                el.textContent = 'Authors:'
+            } 
+            if (el.textContent.toLowerCase().includes('accession')) {
+                el.textContent = 'Accession_Number:'
+            }
+
+            keys.push(el.textContent.trim().slice(0, -1))
         } else if (el.nodeName === '#text' || el.nodeName === 'VALUE') {
             values.push(el.textContent.trim())
         }
@@ -58,4 +65,14 @@ const tableCellParser = (cell) => {
     })
 
     return data
+}
+
+const isExclusionAttrs = (text) => {
+    for (attr of exclusionAttrs) {
+        if (text.toLowerCase().includes(attr)) {
+            return true
+        }
+    }
+
+    return false
 }
