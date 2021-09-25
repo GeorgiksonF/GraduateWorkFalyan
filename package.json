@@ -1,0 +1,29 @@
+{
+  "name": "diplomwork",
+  "version": "1.0.0",
+  "description": "Diplom Work",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "server": "nodemon app.js"
+  },
+  "keywords": [
+    "diplom",
+    "mern",
+    "react",
+    "express",
+    "mongodb"
+  ],
+  "author": "Falyan Georgiy <falyan2000@mail.ru>",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.6",
+    "express": "^4.17.1",
+    "jsdom": "^17.0.0",
+    "mongoose": "^6.0.5"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1",
+    "nodemon": "^2.0.12"
+  }
+}
