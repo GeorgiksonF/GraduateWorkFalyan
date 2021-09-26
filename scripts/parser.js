@@ -6,7 +6,7 @@ const { JSDOM } = jsdom;
 const filePath = path.join(__dirname, 'db.html');
 
 const requiredAttributes = [
-    'Title', 'Author(s)', 'Source',
+    'Title', 'Author(s):', 'Source',
     'Volume', 'Issue', 'Published',
     'DOI', 'Abstract', 'Accession Number',
     'ISSN', 'eISSN',
@@ -14,7 +14,7 @@ const requiredAttributes = [
 
 fs.readFile(filePath, (err, html) => {
     const htmlDOM = new JSDOM(html.toString())
-    const articles = [...htmlDOM.window.document.querySelectorAll("table")].slice(1, 3)
+    const articles = [...htmlDOM.window.document.querySelectorAll("table")]
 
     let articlesData = articles.map(article => {
         let articleData = {}
@@ -27,11 +27,13 @@ fs.readFile(filePath, (err, html) => {
             }
         }
 
-        articleData.authors = setAuthArr(articleData.authors)
-
+        
         return articleData
     }).filter(article => Object.keys(article).length !== 0)
-
+    
+    articlesData.forEach(article => {
+        article.authors = setAuthArr(article.authors)
+    })
     console.log(articlesData)
     articlesData = JSON.stringify(articlesData);
     fs.writeFile('./articles.json', articlesData, err => err);
@@ -72,11 +74,11 @@ const tableCellParser = (cell) => {
 
 const isRequiredAttributes = (text) => {
     for (attr of requiredAttributes) {
-        if (text.includes(attr)) {
+        if (text.includes(attr) && !text.includes('Book Group Author(s)')) {
             return true
         }
     }
-
+    
     return false
 }
 
@@ -91,7 +93,7 @@ const setCorrectKey = (text) => {
 }
 
 const setAuthArr = (authStr) => {
-    return authStr.split(';').map(autor => {
-        return autor.match(/^.+?\s.+?\s/)[0].trim().replace(',', '')
+    return authStr.split(';').map(author => {
+        return author.trim().match(/^\w+(-\w+|\s\w+)*(,\s[A-Z]+|\b)/gm)[0].replace(',', '')
     })
 }
