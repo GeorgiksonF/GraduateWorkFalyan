@@ -4,11 +4,17 @@ const jsdom = require("jsdom");
 
 const { JSDOM } = jsdom;
 const filePath = path.join(__dirname, 'db.html');
-const exclusionAttrs = ['record', 'early access']
+
+const requiredAttributes = [
+    'Title', 'Author(s)', 'Source',
+    'Volume', 'Issue', 'Published',
+    'DOI', 'Abstract', 'Accession Number',
+    'ISSN', 'eISSN',
+]
 
 fs.readFile(filePath, (err, html) => {
     const htmlDOM = new JSDOM(html.toString())
-    const articles = [...htmlDOM.window.document.querySelectorAll("table")]
+    const articles = [...htmlDOM.window.document.querySelectorAll("table")].slice(1, 3)
 
     let articlesData = articles.map(article => {
         let articleData = {}
@@ -20,6 +26,9 @@ fs.readFile(filePath, (err, html) => {
                 ...field
             }
         }
+
+        articleData.authors = setAuthArr(articleData.authors)
+
         return articleData
     }).filter(article => Object.keys(article).length !== 0)
 
@@ -46,15 +55,9 @@ const tableCellParser = (cell) => {
     let cellChildren = cell.filter(el => el.textContent.trim() !== '');
 
     cellChildren.forEach(el => {
-        if (el.nodeName === 'B' && !isExclusionAttrs(el.textContent)) {
-            if (el.textContent.toLowerCase().includes('author')) {
-                el.textContent = 'Authors:'
-            } 
-            if (el.textContent.toLowerCase().includes('accession')) {
-                el.textContent = 'Accession_Number:'
-            }
-
-            keys.push(el.textContent.trim().slice(0, -1))
+        if (el.nodeName === 'B' && isRequiredAttributes(el.textContent)) {
+            el.textContent = setCorrectKey(el.textContent).trim().slice(0, -1).toLowerCase()
+            keys.push(el.textContent)
         } else if (el.nodeName === '#text' || el.nodeName === 'VALUE') {
             values.push(el.textContent.trim())
         }
@@ -63,16 +66,32 @@ const tableCellParser = (cell) => {
     keys.forEach((key, i) => {
         data[key] = values[i]
     })
-
+    
     return data
 }
 
-const isExclusionAttrs = (text) => {
-    for (attr of exclusionAttrs) {
-        if (text.toLowerCase().includes(attr)) {
+const isRequiredAttributes = (text) => {
+    for (attr of requiredAttributes) {
+        if (text.includes(attr)) {
             return true
         }
     }
 
     return false
+}
+
+const setCorrectKey = (text) => {
+    if (text.includes('Author(s)')) {
+        return 'authors:'
+    } else if (text.includes('Accession Number')) {
+        return 'accession_number:'
+    }
+
+    return text
+}
+
+const setAuthArr = (authStr) => {
+    return authStr.split(';').map(autor => {
+        return autor.match(/^.+?\s.+?\s/)[0].trim().replace(',', '')
+    })
 }
