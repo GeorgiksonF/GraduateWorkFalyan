@@ -1,9 +1,11 @@
 const fs = require('fs')
 const path = require('path')
 const jsdom = require("jsdom");
+const csv = require('csv-parser')
 
 const { JSDOM } = jsdom;
-const filePath = path.join(__dirname, 'db.html');
+const articlesPath = path.join(__dirname, 'db.html');
+const journalsPath = path.join(__dirname, 'scimagojr.csv')
 
 const requiredAttributes = [
     'Title', 'Author(s):', 'Source',
@@ -12,7 +14,9 @@ const requiredAttributes = [
     'ISSN', 'eISSN',
 ]
 
-fs.readFile(filePath, (err, html) => {
+// articles parser
+
+fs.readFile(articlesPath, (err, html) => {
     const htmlDOM = new JSDOM(html.toString())
     const articles = [...htmlDOM.window.document.querySelectorAll("table")]
 
@@ -26,7 +30,6 @@ fs.readFile(filePath, (err, html) => {
                 ...field
             }
         }
-
         
         return articleData
     }).filter(article => Object.keys(article).length !== 0)
@@ -34,9 +37,9 @@ fs.readFile(filePath, (err, html) => {
     articlesData.forEach(article => {
         article.authors = setAuthArr(article.authors)
     })
-    console.log(articlesData)
-    articlesData = JSON.stringify(articlesData);
-    fs.writeFile('./articles.json', articlesData, err => err);
+
+    fs.writeFile('./scripts/articles.json', JSON.stringify(articlesData), err => err)
+    journalsParse()
 });
 
 const tableRowParser = (rows) => {
@@ -96,4 +99,27 @@ const setAuthArr = (authStr) => {
     return authStr.split(';').map(author => {
         return author.trim().match(/^\w+(-\w+|\s\w+)*(,\s[A-Z]+|\b)/gm)[0].replace(',', '')
     })
+}
+
+// journals parser
+
+const journalsParse = () => {
+    const journals = [];
+    
+    fs.createReadStream(journalsPath)
+        .pipe(csv({separator: ';'}))
+        .on('data', (data) => journals.push(data))
+        .on('end', () => {
+            let journalsData = journals.map(journal => {
+                if (!journal.SJR) {
+                    journal.SJR = '0'
+                }
+                return {
+                    title: journal.Title,
+                    impact_factor: +journal.SJR.replace(',', '.'),
+                    journal_country: journal.Country
+                }
+            })
+        fs.writeFile('./scripts/journals.json', JSON.stringify(journalsData), err => err)
+    });
 }

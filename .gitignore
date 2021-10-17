@@ -1,4 +1,8 @@
 /node_modules
 
 /scripts/db.html
-/articles.json
+/scripts/scimagojr.csv
+/scripts/articles.json
+/scripts/journals.json
+
+/data.json
