@@ -117,7 +117,8 @@ const journalsParse = () => {
                 return {
                     title: journal.Title,
                     impact_factor: +journal.SJR.replace(',', '.'),
-                    journal_country: journal.Country
+                    journal_country: journal.Country,
+                    issn: journal.Issn
                 }
             })
         fs.writeFile('./scripts/journals.json', JSON.stringify(journalsData), err => err)

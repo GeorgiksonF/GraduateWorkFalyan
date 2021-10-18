@@ -3,7 +3,17 @@ let articles = require('./articles.json')
 let journals = require('./journals.json')
 
 articles = articles.map(article => {
-    let journal = journals.find(journal => article.source.toLowerCase() === journal.title.toLowerCase())
+    let journal = journals.find(journal => {
+        if (article.issn) {
+            return journal.issn.includes(article.issn.replace('-', ''))
+        }
+        
+        if (article.eissn) {
+            return journal.issn.includes(article.eissn.replace('-', ''))
+        }
+
+        return article.source.toLowerCase() === journal.title.toLowerCase()
+    })
 
     if (journal) {
         return {
@@ -21,5 +31,3 @@ articles = articles.map(article => {
 })
 
 fs.writeFile('./data.json', JSON.stringify(articles), err => err)
-
-console.log(articles)
