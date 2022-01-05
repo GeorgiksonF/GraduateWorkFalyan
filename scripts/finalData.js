@@ -30,4 +30,7 @@ articles = articles.map(article => {
     }
 })
 
+
+console.log(articles)
+
 fs.writeFile('./data.json', JSON.stringify(articles), err => err)

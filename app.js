@@ -5,11 +5,12 @@ const mongoose = require('mongoose')
 const app = express()
 
 const PORT = config.get('port') || 5000
-
 const start = async () => {
     try {
         await mongoose.connect(config.get('mongoUri'), {
-            
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true
         })
     } catch (e) {
         console.log('Server error ', e.message)
@@ -19,4 +20,5 @@ const start = async () => {
 
 
 start()
+
 app.listen(PORT, () => console.log(`App has been started on port ${PORT}`))

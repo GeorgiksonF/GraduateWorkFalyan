@@ -11,7 +11,7 @@ const requiredAttributes = [
     'Title', 'Author(s):', 'Source',
     'Volume', 'Issue', 'Published',
     'DOI', 'Abstract', 'Accession Number',
-    'ISSN', 'eISSN',
+    'ISSN', 'eISSN', 'Article Number', 'Pages'
 ]
 
 // articles parser
@@ -66,8 +66,8 @@ const tableCellParser = (cell) => {
         } else if (el.nodeName === '#text' || el.nodeName === 'VALUE') {
             values.push(el.textContent.trim())
         }
-    });
-    
+    })
+
     keys.forEach((key, i) => {
         data[key] = values[i]
     })
