@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 
 const app = express()
 
+app.use('/api/articles', require('./routes/articles.routes'))
+
 const PORT = config.get('port') || 5000
 const start = async () => {
     try {

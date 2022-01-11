@@ -22,43 +22,9 @@ const connection = async () => {
 connection()
 
 const main = () => {
-    const articlesSchema = new Schema({
-        title: String,
-        journal: {
-            type: Schema.Types.ObjectId,
-            ref: 'Journal'
-        },
-        abstract: String,
-        published: String,
-        authors: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Author'
-        }],
-        rating: Number,
-        doi: String,
-        volume: Number,
-        issue: Number
-    })
-    
-    const journalsSchema = new Schema({
-        title: String,
-        impact_factor: Number,
-        issn: String,
-        eissn: String,
-        country: String, 
-    })
-    
-    const authorsSchema = new Schema({
-        author: String,
-        articles: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Article'
-        }]
-    })
-    
-    const Article = mongoose.model('Article', articlesSchema)
-    const Journal = mongoose.model('Journal', journalsSchema)
-    const Author = mongoose.model('Author', authorsSchema)
+    const Article = require('../models/Article')
+    const Journal = require('../models/Journal')
+    const Author = require('../models/Author')
     
     let articlesFilling = async () => {
         let objects = await Promise.all(data.map(async el => {
@@ -93,8 +59,7 @@ const main = () => {
     
         let objects = authors.map(author => {
             return {
-                author,
-                // articles: []
+                author
             }
         })
     
@@ -130,8 +95,10 @@ const main = () => {
     const authorArticlesFilling = async () => {
         let authors = await Author.find({}).exec()
         authors.forEach(async el => {
-            let articles = await Article.find({authors: {$in: [el._id]}}, '_id').exec()
-            el.articles = [...articles]
+            let articles = await Article.find({authors: {$in: [el._id]}}, '_id rating').exec()
+            let authorRating = articles.reduce((rating, el) => rating + el.rating, 0)
+            el.rating = Math.round(authorRating * 100) / 100
+            el.articles = articles.map(x => x._id)
             await el.save()
         })
     }
