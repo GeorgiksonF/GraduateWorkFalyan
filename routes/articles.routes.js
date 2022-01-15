@@ -6,18 +6,18 @@ const router = Router()
 // api/articles
 router.post('/', async (req, res) => {
     try {
-        const {page, size, search, sortField, order} = req.body
-        
+        const {page, size, sortField, order, search} = req.body
+
         const articles = await Article.find({})
             .sort({[sortField]: order || 1})
             .limit(size)
             .skip(size * page)
             .exec()
-
+        
         const count = await Article.count().exec()
 
         return res.status(201).json({
-            data: articles,
+            articles: articles,
             total: count
         })
     } catch (e) {

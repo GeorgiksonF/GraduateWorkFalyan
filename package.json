@@ -19,7 +19,9 @@
   "author": "Falyan Georgiy <falyan2000@mail.ru>",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.1",
     "config": "^3.3.6",
+    "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "express": "^4.17.1",
     "jsdom": "^17.0.0",
