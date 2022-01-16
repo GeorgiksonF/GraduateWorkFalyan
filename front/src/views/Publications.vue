@@ -20,24 +20,28 @@
             </b-form-select>
         </b-row>
 
-        <div class="text-center spin" v-if="preloader">
-            <b-spinner variant="primary" label="Spinning"></b-spinner>
-        </div>
-
-        <div v-else>
+        <div>
             <b-table
                 id="publications-table"
                 :items="items"
                 :fields="tableFields"
                 :current-page="page"
+                :busy="preloader"
                 class="table">
                 <template #cell(title)="data">
                     <b-link :to="getUri(data.item)">{{data.value}}</b-link>
+                </template>
+                <template #table-busy>
+                    <div class="text-center text-grow my-2">
+                        <b-spinner variant="grow" class="align-middle"></b-spinner>
+                        <strong>Loading...</strong>
+                    </div>
                 </template>
             </b-table>
 
             <b-row class="justify-content-md-center">
                 <b-pagination
+                    v-if="!preloader"
                     v-model="page"
                     :total-rows="totalRow"
                     :per-page="size"
@@ -166,16 +170,7 @@ export default {
             margin-right: 20px;
         }
     }
-
-    .spin {
-        margin-top: 50px;
-    }
-
     .table {
-        margin-top: 20px;
-    }
-    
-    .pagination {
         margin-top: 20px;
     }
 </style>

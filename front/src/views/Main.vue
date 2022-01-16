@@ -1,12 +1,14 @@
 <template>
     <div class="intro">
         <div class="intro__media">
-            <video class="intro__video" src="~@/assets/intro.mp4" autoplay muted loop></video>
+            <keep-alive>
+                <video class="intro__video" src="~@/assets/intro.mp4" autoplay muted loop></video>
+            </keep-alive>
         </div>
         <div class="container">
             <div class="intro__info">
                 <h1 class="intro__header">Thesis</h1>
-                <p class="intro__text">This is the diploma work of a student of the Institute of Physics of the Saratov State University named after N.G. Chernyshevsky.</p>
+                <p class="intro__text">This is the thesis of a 4th course student of the Institute of Physics of the Saratov State University named after N.G. Chernyshevsky, made by Georgy Falyan. More details about the project in the "About" tab.</p>
                 <b-button to="/publications" variant="primary" class="intro__btn">View publications</b-button>
             </div>
         </div>
@@ -50,7 +52,6 @@
             height: 100%;
             width: 100%;
             overflow: hidden;
-            background: #ccc url('~@/assets/intro.jpg') no-repeat center center;
             background-size: cover;
             &::before {
                 content: "";
