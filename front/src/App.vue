@@ -6,6 +6,8 @@
       <Publications/>
       <Publication/>
       <Journals/>
+      <Authors/>
+      <Author/>
     </router-view>
   </div>
 </template>
@@ -17,6 +19,8 @@ import Main from './views/Main'
 import Publications from './views/Publications'
 import Publication from './views/Publication'
 import Journals from './views/Journals'
+import Authors from './views/Authors'
+import Author from './views/Author'
 
 export default {
   name: 'App',
@@ -26,7 +30,9 @@ export default {
     Main,
     Publications,
     Publication,
-    Journals
+    Journals,
+    Authors,
+    Author
   }
 }
 </script>

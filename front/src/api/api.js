@@ -22,3 +22,14 @@ export const journalsApi = {
                 .then(res => res)
     }
 }
+
+export const authorsApi = {
+    getAuthors(data) {
+        return instance.post(`/api/authors`, data, {"Content-Type": "application/json"})
+                .then(res => res)
+    },
+    getAuthorById(authorId) {
+        console.log(authorId)
+        return instance.post(`/api/authors/id=${authorId}`, authorId, {"Content-Type": "application/json"})
+    }
+}

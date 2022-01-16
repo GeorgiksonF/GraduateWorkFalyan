@@ -4,7 +4,7 @@
             <h1 class="article__title">{{article.title}}</h1>
             <p class="article__abstract">{{article.abstract}}</p>
             <ul class="article__info">
-                li.article__info-item*
+                
             </ul>
         </div>
     </div>

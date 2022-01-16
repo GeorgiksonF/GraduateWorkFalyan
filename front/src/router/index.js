@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Main from '../views/Main'
 import Publications from '../views/Publications'
 import Publication from '../views/Publication'
 import Journals from '../views/Journals'
-import Main from '../views/Main'
+import Authors from '../views/Authors'
+import Author from '../views/Author'
 
 Vue.use(VueRouter)
 
@@ -28,6 +30,17 @@ const routes = [
     path: '/journals',
     name: 'Journals',
     component: Journals
+  },
+  {
+    path: '/authors',
+    name: 'Authors',
+    component: Authors
+  },
+  {
+    path: '/authors/id=:id',
+    name: 'Author',
+    component: Author,
+    props: true
   }
 ]
 
