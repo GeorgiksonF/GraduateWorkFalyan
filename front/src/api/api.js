@@ -9,9 +9,9 @@ export const publicationsApi = {
         return instance.post(`/api/articles`, data, {"Content-Type": "application/json"})
                 .then(res => res)
     },
-    getArticleInfo(data) {
-        console.log(data)
-        return instance.post(`/api/articles/id=${data.id}`, data, {"Content-Type": "application/json"})
+    getArticleBuId(data) {
+        // console.log(data)
+        return instance.post(`/api/articles/id=${data.articleId}`, data, {"Content-Type": "application/json"})
                 .then(res => res)
     }
 }
@@ -28,8 +28,8 @@ export const authorsApi = {
         return instance.post(`/api/authors`, data, {"Content-Type": "application/json"})
                 .then(res => res)
     },
-    getAuthorById(authorId) {
-        console.log(authorId)
-        return instance.post(`/api/authors/id=${authorId}`, authorId, {"Content-Type": "application/json"})
+    getAuthorById(data) {
+        return instance.post(`/api/authors/id=${data.authorId}`, data, {"Content-Type": "application/json"})
+                .then(res => res)
     }
 }

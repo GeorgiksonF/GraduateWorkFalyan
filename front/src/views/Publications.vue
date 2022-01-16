@@ -93,7 +93,7 @@ export default {
         getUri(item) {
             return {
                 name: 'Publication',
-                params: {id: item._id, article: item}
+                params: {id: item._id}
             }
         },
         changeSort(value) {

@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <div class="article">
-            <h1 class="article__title">{{article.title}}</h1>
-            <p class="article__abstract">{{article.abstract}}</p>
+            <h1 class="article__title">{{articleInfo.title}}</h1>
+            <p class="article__abstract">{{articleInfo.abstract}}</p>
             <ul class="article__info">
                 
             </ul>
@@ -15,28 +15,23 @@ import { publicationsApi } from '../api/api'
 export default {
     data() {
         return {
-            journal: '',
-            authorsList: []
+            articleInfo: {}
         }
     },
-    props: {
-        article: Object
-    },
     methods: {
-        fetchArticleInfo() {
+        fetchArticle() {
             const dto = {
-                id: this.article._id || '',
-                authorsIds: this.article.authors || [],
-                journalId: this.article.journal || ''
+                articleId: this.$router.currentRoute.params.id
             }
-            return publicationsApi.getArticleInfo(dto)
+
+            return publicationsApi.getArticleBuId(dto)
                     .then(res => {
-                        console.log(res)
+                        this.articleInfo = res.data.article || {}
                     })
         }
     },
     mounted() {
-        // this.fetchArticleInfo()
+        this.fetchArticle()
     }
 }
 </script>

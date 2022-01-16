@@ -52,7 +52,6 @@ router.post('/id=:id', async (req, res) => {
         author.articles = await Promise.all(author.articles.map(async articleId => {
             return await Article.findById(articleId, '_id title').exec()
         }))
-        console.log(author)
         
         return res.status(201).json({
             author
