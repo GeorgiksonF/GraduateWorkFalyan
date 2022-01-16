@@ -4,22 +4,29 @@
     <router-view>
       <Main/>
       <Publications/>
+      <Publication/>
+      <Journals/>
     </router-view>
   </div>
 </template>
 
 <script>
 import store from './store/store'
-import Navbar from './view/Navbar'
-import Main from './view/Main'
-import Publications from './view/Publications'
+import Navbar from './views/Navbar'
+import Main from './views/Main'
+import Publications from './views/Publications'
+import Publication from './views/Publication'
+import Journals from './views/Journals'
+
 export default {
   name: 'App',
   store,
   components: {
     Navbar,
     Main,
-    Publications
+    Publications,
+    Publication,
+    Journals
   }
 }
 </script>

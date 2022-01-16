@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
 app.use('/api/articles', require('./routes/articles.routes'))
+app.use('/api/journals', require('./routes/journals.routes'))
 
 const PORT = config.get('port') || 5000
 const start = async () => {

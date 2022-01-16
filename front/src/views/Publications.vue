@@ -32,9 +32,10 @@
                 :current-page="page"
                 class="table">
                 <template #cell(title)="data">
-                    <b-link :to="getUri(data.item._id)">{{data.value}}</b-link>
+                    <b-link :to="getUri(data.item)">{{data.value}}</b-link>
                 </template>
             </b-table>
+
             <b-row class="justify-content-md-center">
                 <b-pagination
                     v-model="page"
@@ -50,6 +51,7 @@
 
 <script>
 import { publicationsApi } from '../api/api'
+
 export default {
     data() {
         return {
@@ -88,8 +90,11 @@ export default {
         }
     },
     methods: {
-        getUri(id) {
-            return `/publications/id=${id}`
+        getUri(item) {
+            return {
+                name: 'Publication',
+                params: {id: item._id, article: item}
+            }
         },
         changeSort(value) {
             this.sort = {

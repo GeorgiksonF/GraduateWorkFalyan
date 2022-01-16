@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Publications from '../view/Publications'
-import Publication from '../view/Publication'
-import Main from '../view/Main'
+import Publications from '../views/Publications'
+import Publication from '../views/Publication'
+import Journals from '../views/Journals'
+import Main from '../views/Main'
 
 Vue.use(VueRouter)
 
@@ -18,9 +19,15 @@ const routes = [
     component: Publications
   },
   {
-    path: '/publications/:id',
-    name: '/Publication',
-    component: Publication
+    path: '/publications/id=:id',
+    name: 'Publication',
+    component: Publication,
+    props: true
+  },
+  {
+    path: '/journals',
+    name: 'Journals',
+    component: Journals
   }
 ]
 
