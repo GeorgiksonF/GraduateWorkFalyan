@@ -19,19 +19,18 @@ router.post('/', async (req, res) => {
         if (sortField && sortField !== '') {
             sortParams[sortField] = order
         }
-
+        
         const articles = await Article.find(findParams)
             .sort(sortParams)
             .limit(size)
             .skip(size * page)
             .exec()
         
-        const count = await Article.count().exec()
-        const finded = articles.length
+        const count = await Article.count(findParams).exec()
+
         return res.status(201).json({
             articles: articles,
-            total: count,
-            finded: finded
+            total: count
         })
     } catch (e) {
         return res.status(500).json({message: 'Somethings going wrong, try again!'})
@@ -42,7 +41,6 @@ router.post('/', async (req, res) => {
 router.post('/id=:id', async (req, res) => {
     try {
         const {articleId} = req.body
-        
         const article = await Article.findById(articleId).exec()
         
         article.journal = await Journal.findById(article.journal, '_id title').exec()
