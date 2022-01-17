@@ -8,7 +8,10 @@
         <div class="container">
             <div class="intro__info">
                 <h1 class="intro__header">Thesis</h1>
-                <p class="intro__text">This is the thesis of a 4th course student of the Institute of Physics of the Saratov State University named after N.G. Chernyshevsky, made by Georgy Falyan. More details about the project in the "About" tab.</p>
+                <p class="intro__text">This is the diplom work of a 4th course student of the Institute of Physics of the SSU, 
+                    made by Georgiy Falyan. This resource presents a database of scientific papers published by the staff of 
+                    the Saratov State University. N. G. Chernyshevsky over the past few years. Information about the article 
+                    is taken from the Web Of Science database.</p>
                 <b-button to="/publications" variant="primary" class="intro__btn">View publications</b-button>
             </div>
         </div>

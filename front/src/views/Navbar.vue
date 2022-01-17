@@ -8,7 +8,6 @@
                     <b-nav-item to="/publications">Publications</b-nav-item>
                     <b-nav-item to="/journals">Journals</b-nav-item>
                     <b-nav-item to="/authors">Authors</b-nav-item>
-                    <b-nav-item to="/about">About</b-nav-item>
                 </b-navbar-nav>
             </b-collapse>
         </div>

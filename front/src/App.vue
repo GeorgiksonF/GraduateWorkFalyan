@@ -32,7 +32,7 @@ export default {
     Publication,
     Journals,
     Authors,
-    Author
+    Author,
   }
 }
 </script>
