@@ -9,7 +9,7 @@
                 <b-badge variant="dark">Rating: {{authorInfo.rating}}</b-badge>
             </h1>
             <div class="author__publications">
-                <h2>Публикации автора:</h2>
+                <h2>Author's publications:</h2>
                 <ul class="author__articles">
                     <li v-for="article in authorInfo.articles" :key="article.id">
                         <b-link :to="getUri(article._id)">
