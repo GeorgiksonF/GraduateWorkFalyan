@@ -9,6 +9,7 @@ router.post('/', async (req, res) => {
         const {page, size, sortField, order, search} = req.body
         const findParams = {}
         const sortParams = {}
+        
         if (search && search !== '') {
             findParams['title'] = {$regex: search,  $options: 'i'}
         }
@@ -23,12 +24,11 @@ router.post('/', async (req, res) => {
                 .skip(size * page)
                 .exec()
         
-        const count = await Journal.count().exec()
-        const finded = journals.length
+        const count = await Journal.count(findParams).exec()
+
         return res.status(201).json({
             journals,
             total: count,
-            finded
         })
     } catch (e) {
         return res.status(500).json({message: 'Somethings going wrong, try again!'})

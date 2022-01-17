@@ -5,7 +5,8 @@
                 id="input-small"
                 class="w-75"
                 v-model="searchText"
-                placeholder="Search journal">
+                placeholder="Search journal"
+                @keyup.enter="onSearch">
             </b-form-input>
             <b-button variant="primary" @click="onSearch" class="search__btn">Search</b-button>
             <b-button variant="danger" v-if="hasSearch" @click="onResetSearch" class="search__reset">Reset search</b-button>
@@ -43,9 +44,9 @@
 
             <b-row class="justify-content-md-center">
                 <b-pagination
-                    v-if="!preloader"
+                    v-if="!preloader && totalCount > size"
                     v-model="page"
-                    :total-rows="totalRow"
+                    :total-rows="totalCount"
                     :per-page="size"
                     class="pagination"
                     aria-controls="publications-table">
@@ -63,7 +64,6 @@ export default {
             size: 50,
             page: 1,
             totalCount: 0,
-            findedCount: 0,
             searchText: '',
             hasSearch: false,
             preloader: false,
@@ -87,15 +87,6 @@ export default {
                 {value: {field: 'country', order: 'asc'}, text: 'Country A -> Z'},
                 {value: {field: 'country', order: 'desc'}, text: 'Country Z -> A'}
             ]
-        }
-    },
-    computed: {
-        totalRow() {
-            if (this.hasSearch) {
-                return this.findedCount
-            }
-
-            return this.totalCount
         }
     },
     methods: {
@@ -131,7 +122,6 @@ export default {
                     .then(res => {
                         this.totalCount = res.data.total || 0
                         this.items = res.data.journals || []
-                        this.findedCount = res.data.finded || 0
                         this.preloader = false
                     })
         }
