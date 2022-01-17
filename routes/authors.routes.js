@@ -10,6 +10,7 @@ router.post('/', async (req, res) => {
         const {page, size, sortField, order, search} = req.body
         const findParams = {}
         const sortParams = {}
+        
         if (search && search !== '') {
             findParams['author'] = {$regex: search,  $options: 'i'}
         }
@@ -23,19 +24,12 @@ router.post('/', async (req, res) => {
                 .limit(size)
                 .skip(size * page)
                 .exec()
-
-        // authors.map(async author => {
-        //     author.articles = await Promise.all(author.articles.map(async articleId => {
-        //         return await Article.findById(articleId, '_id title').exec()
-        //     }))
-        // })
         
-        const count = await Author.count().exec()
-        const finded = authors.length
+        const count = await Author.count(findParams).exec()
+
         return res.status(201).json({
             authors,
-            total: count,
-            finded
+            total: count
         })
     } catch (e) {
         return res.status(500).json({message: 'Somethings going wrong, try again!'})
