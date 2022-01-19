@@ -10,13 +10,15 @@
             </h1>
             <div class="author__publications">
                 <h2>Author's publications:</h2>
-                <ul class="author__articles">
+                <ol class="author__articles">
                     <li v-for="article in authorInfo.articles" :key="article.id">
                         <b-link :to="getUri(article._id)">
                             {{article.title}}
+                            <b-badge variant="dark">Article rating: {{article.rating}}</b-badge>
                         </b-link>
+                        <p>Journal: {{article.journal.title}}</p>
                     </li>
-                </ul>
+                </ol>
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 const {Router} = require('express')
 const Author = require('../models/Author')
+const Journal = require('../models/Journal')
 const Article = require('../models/Article')
 const router = Router()
 
@@ -44,7 +45,12 @@ router.post('/id=:id', async (req, res) => {
         let author = await Author.findById(authorId).exec()
         
         author.articles = await Promise.all(author.articles.map(async articleId => {
-            return await Article.findById(articleId, '_id title').exec()
+            return await Article.findById(articleId, '_id title rating journal').exec()
+        }))
+       
+        author.articles = await Promise.all(author.articles.map(async article => {
+            article.journal = await Journal.findById(article.journal, '_id title').exec()
+            return article
         }))
         
         return res.status(201).json({
