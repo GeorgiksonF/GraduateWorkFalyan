@@ -11,7 +11,8 @@ const requiredAttributes = [
     'Title', 'Author(s):', 'Source',
     'Volume', 'Issue', 'Published',
     'DOI', 'Abstract', 'Accession Number',
-    'ISSN', 'eISSN', 'Article Number', 'Pages'
+    'ISSN', 'eISSN', 'Article Number', 'Pages',
+    'Book Series', 'Supplement', 'Part'
 ]
 
 // articles parser
@@ -77,7 +78,9 @@ const tableCellParser = (cell) => {
 
 const isRequiredAttributes = (text) => {
     for (attr of requiredAttributes) {
-        if (text.includes(attr) && !text.includes('Book Group Author(s)')) {
+        if (text.includes(attr) &&
+            !text.includes('Book Group Author(s)') && 
+            !text.includes('Group Author(s)')) {
             return true
         }
     }
@@ -88,6 +91,10 @@ const isRequiredAttributes = (text) => {
 const setCorrectKey = (text) => {
     if (text.includes('Author(s)')) {
         return 'authors:'
+    } else if (text.includes('Book Series')) {
+        return 'book_series:'
+    } else if (text.includes('Article Number')) {
+        return 'article_number:'
     } else if (text.includes('Accession Number')) {
         return 'accession_number:'
     }
@@ -97,7 +104,9 @@ const setCorrectKey = (text) => {
 
 const setAuthArr = (authStr) => {
     return authStr.split(';').map(author => {
-        return author.trim().match(/^\w+(-\w+|\s\w+)*(,\s[A-Z]+|\b)/gm)[0].replace(',', '')
+        return author.trim().match(/^\w+(-\w+|\s\w+|\'\w+)*(,\s[A-Z]+|\b)/gm)[0]
+            .replace(',', '')
+            .replace('\'', '',)
     })
 }
 

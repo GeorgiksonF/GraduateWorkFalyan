@@ -5,7 +5,7 @@
                 id="input-small"
                 class="w-75"
                 v-model="searchText"
-                placeholder="Search journal"
+                placeholder="Search author"
                 @keyup.enter="onSearch">
             </b-form-input>
             <b-button variant="primary" @click="onSearch" class="search__btn">Search</b-button>
@@ -42,7 +42,7 @@
 
             <b-row class="justify-content-md-center">
                 <b-pagination
-                    v-if="!preloader  && totalCount > size"
+                    v-if="!preloader && totalCount > size"
                     v-model="page"
                     :total-rows="totalCount"
                     :per-page="size"

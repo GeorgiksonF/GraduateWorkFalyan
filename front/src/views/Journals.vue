@@ -40,6 +40,21 @@
                         {{data.value}}
                     </div>
                 </template>
+                <template #cell(impact_factor)="data">
+                    <div>
+                        {{data.value || 0}}
+                    </div>
+                </template>
+                <template #cell(issn)="data">
+                    <div>
+                        {{data.value || '-'}}
+                    </div>
+                </template>
+                <template #cell(eissn)="data">
+                    <div>
+                        {{data.value || '-'}}
+                    </div>
+                </template>
             </b-table>
 
             <b-row class="justify-content-md-center">

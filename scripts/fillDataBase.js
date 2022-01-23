@@ -1,10 +1,7 @@
-const fs = require('fs')
 const mongoose = require('mongoose')
 const config = require('config')
 const data = require('../data.json')
 const _ = require('lodash')
-const { forEach } = require('lodash')
-const { Schema } = mongoose;
 
 const connection = async () => {
     try {
@@ -46,6 +43,7 @@ const main = () => {
                 issue: +el.issue || null
             }
         }))
+        
         console.log(objects.length)
         let article = null
         objects.forEach(async el => {
@@ -57,38 +55,38 @@ const main = () => {
     let authorsFilling = () => {
         let authors = _.uniq(data.flatMap(el => el.authors))
     
-        let objects = authors.map(author => {
-            return {
-                author
-            }
-        })
+        let objects = authors.map(author => ({author}))
     
         objects = _.uniqBy(objects, el => el.author)
         console.log(objects.length)
         let author = null
         objects.forEach(async el => {
-            author = new Author(el)
-            await author.save()
+            let hasAuthor = await Author.findOne({author: el.author}).exec()
+            if (!hasAuthor) {
+                author = new Author(el)
+                await author.save()
+            }
         })
     }
     
     let journalsFilling = () => {
-        let objects = data.map(el => {
-            return {
+        let objects = data.map(el => ({
                 title: el.source || '',
                 impact_factor: el.impact_factor || null,
                 issn: el.issn || '',
                 eissn: el.eissn || '',
                 country: el.journal_country || '', 
-            }
-        })
+        }))
     
-        objects = _.uniqBy(objects, el => el.issn || el.eissn)
+        objects = _.uniqBy(objects, el => el.title)
         console.log(objects.length)
         let journal = null
         objects.forEach(async el => {
-            journal = new Journal(el)
-            await journal.save()
+            let hasJournal = await Journal.findOne({title: el.title}).exec()
+            if (!hasJournal) {
+                journal = new Journal(el)
+                await journal.save()
+            }
         })
     }
 
@@ -101,9 +99,10 @@ const main = () => {
             el.articles = articles.map(x => x._id)
             await el.save()
         })
+        console.log('end')
     }
     
-    let init = () => {
+    let init = async () => {
         // journalsFilling()
         // authorsFilling()
         // articlesFilling()
