@@ -8,6 +8,14 @@
                 {{authorInfo.author}}
                 <b-badge variant="dark">Rating: {{authorInfo.rating}}</b-badge>
             </h1>
+            <div class="author__rating">
+                <h2>Author rating changing:</h2>
+                <ul class="author__rating-list" v-for="item, i in ratingByYear" :key="i">
+                    <li class="author__rating-item">
+                        <span class="author__rating-item-key">{{item.year}}</span>: {{item.rating}}
+                    </li>
+                </ul>
+            </div>
             <div class="author__publications">
                 <h2>Author's publications:</h2>
                 <ol class="author__articles">
@@ -30,6 +38,7 @@ export default {
     data() {
         return {
             authorInfo: {},
+            ratingByYear: [],
             preloader: false
         }
     },
@@ -46,6 +55,7 @@ export default {
             return authorsApi.getAuthorById(dto)
                     .then(res => {
                         this.authorInfo = res.data.author || {}
+                        this.ratingByYear = res.data.ratingByYear || []
                         this.preloader = false
                     })
         }
@@ -71,6 +81,23 @@ export default {
 
         &__articles {
             font-size: 23px;
+        }
+        &__rating {
+            display: flex;
+            flex-direction: column;
+            &-list {
+                display: flex;
+                flex-direction: column;
+                list-style-type: none;
+                padding: 16px 0;
+                padding: 0;
+            }
+            &-item {
+                font-size: 25px;
+                &-key {
+                    font-weight: bold;
+                }
+            }
         }
     }
 </style>

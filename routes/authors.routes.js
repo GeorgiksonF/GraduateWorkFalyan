@@ -45,7 +45,7 @@ router.post('/id=:id', async (req, res) => {
         let author = await Author.findById(authorId).exec()
         
         author.articles = await Promise.all(author.articles.map(async articleId => {
-            return await Article.findById(articleId, '_id title rating journal').exec()
+            return await Article.findById(articleId, '_id title rating journal published').exec()
         }))
        
         author.articles = await Promise.all(author.articles.map(async article => {
@@ -53,8 +53,38 @@ router.post('/id=:id', async (req, res) => {
             return article
         }))
         
+        let years = []
+        let articlesRating = author.articles.map(x => {
+            let year = +x.published.trim().match(/\d{4}/gm)[0]
+            let rating = x.rating
+
+            if (!years.includes(year)) {
+                years.push(year)
+            }
+
+            return {
+                year,
+                rating
+            }
+        })
+
+        let startRating = 0
+        let ratingByYear = years.sort().map(year => {
+            let rating = articlesRating
+                .filter(x => x.year === year)
+                .map(x => x.rating)
+                .reduce((sum, current) => sum + current, 0)
+            rating = Math.round((rating + startRating) * 100) / 100
+            startRating = rating
+            return {
+                year,
+                rating
+            }
+        })
+        
         return res.status(201).json({
-            author
+            author,
+            ratingByYear
         })
     } catch (e) {
         return res.status(500).json({message: 'Somethings going wrong, try again!'})
