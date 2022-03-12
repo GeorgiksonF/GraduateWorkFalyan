@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import store from './store/store'
 import Navbar from './views/Navbar'
 import Main from './views/Main'
 import Publications from './views/Publications'
@@ -24,7 +23,6 @@ import Author from './views/Author'
 
 export default {
   name: 'App',
-  store,
   components: {
     Navbar,
     Main,
